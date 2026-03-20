@@ -1,20 +1,81 @@
 <?php
 
-use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\Admin\AdminController;
+use App\Http\Controllers\Admin\SlideController;
+use App\Http\Controllers\Admin\SectionController;
+use App\Http\Controllers\Admin\CompanyValueController;
+use App\Http\Controllers\Admin\ProductCategoryController;
+use App\Http\Controllers\Admin\ProductController;
+use App\Http\Controllers\Admin\IndustryController;
+use App\Http\Controllers\Admin\GalleryController;
+use App\Http\Controllers\Admin\ContactMessageController;
+use App\Http\Controllers\Admin\SiteSettingController;
+use App\Http\Controllers\PageController;
+use App\Http\Controllers\ContactController;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/', function () {
-    return view('welcome');
+/*
+|--------------------------------------------------------------------------
+| Rutas Públicas
+|--------------------------------------------------------------------------
+*/
+
+Route::get('/', [PageController::class, 'home'])->name('home');
+Route::get('/nosotros', [PageController::class, 'about'])->name('about');
+Route::get('/productos', [PageController::class, 'products'])->name('products');
+Route::get('/productos/{category:slug}', [PageController::class, 'productCategory'])->name('products.category');
+Route::get('/productos/{category:slug}/{product:slug}', [PageController::class, 'productDetail'])->name('products.detail');
+Route::get('/galeria', [PageController::class, 'gallery'])->name('gallery');
+Route::get('/industrias', [PageController::class, 'industries'])->name('industries');
+Route::get('/contacto', [PageController::class, 'contact'])->name('contact');
+Route::post('/contacto', [ContactController::class, 'store'])->name('contact.store');
+
+/*
+|--------------------------------------------------------------------------
+| Rutas de Autenticación (login simple)
+|--------------------------------------------------------------------------
+*/
+
+Route::get('/admin/login', [AdminController::class, 'loginForm'])->name('admin.login');
+Route::post('/admin/login', [AdminController::class, 'login'])->name('admin.login.submit');
+Route::post('/admin/logout', [AdminController::class, 'logout'])->name('admin.logout');
+
+/*
+|--------------------------------------------------------------------------
+| Rutas Admin (protegidas por auth)
+|--------------------------------------------------------------------------
+*/
+
+Route::prefix('admin')->name('admin.')->middleware('auth')->group(function () {
+    Route::get('/', [AdminController::class, 'dashboard'])->name('dashboard');
+
+    // Slides
+    Route::resource('slides', SlideController::class);
+
+    // Secciones (Nosotros, Misión, Visión)
+    Route::resource('sections', SectionController::class);
+
+    // Valores
+    Route::resource('values', CompanyValueController::class);
+
+    // Categorías de productos
+    Route::resource('product-categories', ProductCategoryController::class);
+
+    // Productos
+    Route::resource('products', ProductController::class);
+
+    // Industrias
+    Route::resource('industries', IndustryController::class);
+
+    // Galería
+    Route::resource('gallery', GalleryController::class);
+
+    // Mensajes de contacto
+    Route::get('messages', [ContactMessageController::class, 'index'])->name('messages.index');
+    Route::get('messages/{contactMessage}', [ContactMessageController::class, 'show'])->name('messages.show');
+    Route::delete('messages/{contactMessage}', [ContactMessageController::class, 'destroy'])->name('messages.destroy');
+
+    // Configuración del sitio
+    Route::get('settings', [SiteSettingController::class, 'index'])->name('settings.index');
+    Route::put('settings', [SiteSettingController::class, 'update'])->name('settings.update');
 });
-
-Route::get('/dashboard', function () {
-    return view('dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
-
-Route::middleware('auth')->group(function () {
-    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
-    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
-    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
-});
-
-require __DIR__.'/auth.php';

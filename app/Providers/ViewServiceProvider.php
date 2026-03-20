@@ -3,20 +3,15 @@
 namespace App\Providers;
 
 use App\Models\SiteSetting;
-use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\View;
+use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\ServiceProvider;
 
-class AppServiceProvider extends ServiceProvider
+class ViewServiceProvider extends ServiceProvider
 {
-    public function register(): void
-    {
-        //
-    }
-
     public function boot(): void
     {
-        // Compartir settings del sitio con todas las vistas
+        // Compartir settings con todas las vistas
         View::composer('*', function ($view) {
             if (Schema::hasTable('site_settings')) {
                 $siteSettings = SiteSetting::all()->pluck('value', 'key');
