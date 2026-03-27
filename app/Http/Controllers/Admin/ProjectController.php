@@ -23,7 +23,7 @@ class ProjectController extends Controller
     {
         return view('admin.projects.form', [
             'project' => new Project(),
-            'industries' => Industry::orderBy('name')->get(),
+            'industries' => Industry::with(['subcategories' => fn($q) => $q->orderBy('name')])->orderBy('name')->get(),
         ]);
     }
 
@@ -31,6 +31,7 @@ class ProjectController extends Controller
     {
         $data = $request->validate([
             'industry_id' => 'required|exists:industries,id',
+            'industry_subcategory_id' => 'nullable|exists:industry_subcategories,id',
             'name' => 'required|string|max:255',
             'short_description' => 'nullable|string|max:500',
             'description' => 'nullable|string',
@@ -71,7 +72,7 @@ class ProjectController extends Controller
 
         return view('admin.projects.form', [
             'project' => $project,
-            'industries' => Industry::orderBy('name')->get(),
+            'industries' => Industry::with(['subcategories' => fn($q) => $q->orderBy('name')])->orderBy('name')->get(),
         ]);
     }
 
@@ -79,6 +80,7 @@ class ProjectController extends Controller
     {
         $data = $request->validate([
             'industry_id' => 'required|exists:industries,id',
+            'industry_subcategory_id' => 'nullable|exists:industry_subcategories,id',
             'name' => 'required|string|max:255',
             'short_description' => 'nullable|string|max:500',
             'description' => 'nullable|string',

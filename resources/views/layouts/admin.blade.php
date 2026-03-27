@@ -49,6 +49,7 @@
                         ['route' => 'admin.products.index', 'icon' => 'package', 'label' => 'Productos'],
                         ['route' => 'admin.industries.index', 'icon' => 'building-2', 'label' => 'Industrias'],
                         ['route' => 'admin.projects.index', 'icon' => 'folder-open', 'label' => 'Proyectos'],
+                        ['route' => 'admin.subcategories.index', 'icon' => 'git-branch', 'label' => 'Subcategorías'],
                         ['route' => 'admin.gallery.index', 'icon' => 'gallery-horizontal-end', 'label' => 'Galería'],
                         ['route' => 'admin.messages.index', 'icon' => 'mail', 'label' => 'Mensajes'],
                         ['route' => 'admin.settings.index', 'icon' => 'settings', 'label' => 'Configuración'],

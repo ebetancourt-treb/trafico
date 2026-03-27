@@ -22,6 +22,11 @@ class Industry extends Model
         return $this->hasMany(Project::class);
     }
 
+    public function subcategories(): HasMany
+    {
+        return $this->hasMany(IndustrySubcategory::class);
+    }
+
     public function scopeActive($query)
     {
         return $query->where('is_active', true)->orderBy('order');

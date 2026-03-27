@@ -7,8 +7,7 @@
     <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-8">
         @if($errors->any())
             <div class="bg-red-50 border border-red-200 text-red-700 rounded-lg p-4 mb-6">
-                <div class="flex items-center gap-2 mb-2"><i data-lucide="alert-circle" class="w-5 h-5 text-red-500"></i><span class="font-medium">Errores:</span></div>
-                <ul class="list-disc list-inside text-sm space-y-1">@foreach($errors->all() as $error)<li>{{ $error }}</li>@endforeach</ul>
+                <ul class="list-disc list-inside text-sm">@foreach($errors->all() as $error)<li>{{ $error }}</li>@endforeach</ul>
             </div>
         @endif
 
@@ -16,14 +15,26 @@
             @csrf
             @if($project->exists) @method('PUT') @endif
 
-            <div>
-                <label class="block text-sm font-medium text-gray-700 mb-1">Categoría (Industria) *</label>
-                <select name="industry_id" required class="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-sm focus:ring-2 focus:ring-navy-500 outline-none">
-                    <option value="">Seleccionar...</option>
-                    @foreach($industries as $ind)
-                        <option value="{{ $ind->id }}" {{ old('industry_id', $project->industry_id) == $ind->id ? 'selected' : '' }}>{{ $ind->name }}</option>
-                    @endforeach
-                </select>
+            {{-- Industria y Subcategoría --}}
+            <div class="grid grid-cols-2 gap-4">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Industria *</label>
+                    <select name="industry_id" id="industry-select" required onchange="updateSubcategories()"
+                            class="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-sm focus:ring-2 focus:ring-navy-500 outline-none">
+                        <option value="">Seleccionar...</option>
+                        @foreach($industries as $ind)
+                            <option value="{{ $ind->id }}" {{ old('industry_id', $project->industry_id) == $ind->id ? 'selected' : '' }}>{{ $ind->name }}</option>
+                        @endforeach
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Subcategoría</label>
+                    <select name="industry_subcategory_id" id="subcategory-select"
+                            class="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-sm focus:ring-2 focus:ring-navy-500 outline-none">
+                        <option value="">Sin subcategoría</option>
+                    </select>
+                    <p class="text-xs text-gray-400 mt-1">Selecciona primero una industria</p>
+                </div>
             </div>
 
             <div>
@@ -44,12 +55,12 @@
 
             <div>
                 <label class="block text-sm font-medium text-gray-700 mb-1">Descripción corta</label>
-                <input type="text" name="short_description" value="{{ old('short_description', $project->short_description) }}" maxlength="500" placeholder="Resumen breve del proyecto" class="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-sm outline-none">
+                <input type="text" name="short_description" value="{{ old('short_description', $project->short_description) }}" maxlength="500" class="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-sm outline-none">
             </div>
 
             <div>
                 <label class="block text-sm font-medium text-gray-700 mb-1">Descripción completa</label>
-                <textarea name="description" rows="5" placeholder="Detalla los trabajos realizados, materiales, alcance, etc." class="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-sm outline-none resize-none">{{ old('description', $project->description) }}</textarea>
+                <textarea name="description" rows="5" class="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-sm outline-none resize-none">{{ old('description', $project->description) }}</textarea>
             </div>
 
             <div>
@@ -60,33 +71,22 @@
 
             {{-- Galería --}}
             <div class="bg-blue-50/50 rounded-lg p-5 border border-blue-100">
-                <label class="block text-sm font-medium text-gray-700 mb-3">
-                    <i data-lucide="images" class="w-4 h-4 inline text-blue-500"></i>
-                    Galería de fotos del proyecto
-                </label>
-
+                <label class="block text-sm font-medium text-gray-700 mb-3"><i data-lucide="images" class="w-4 h-4 inline text-blue-500"></i> Galería de fotos</label>
                 @if($project->exists && $project->images->count())
                     <div class="grid grid-cols-4 sm:grid-cols-6 gap-3 mb-4">
                         @foreach($project->images as $img)
                             <div class="relative group">
                                 <img src="{{ asset('storage/' . $img->image) }}" class="w-full aspect-square object-cover rounded-lg">
-                                <label class="absolute inset-0 bg-red-500/0 group-hover:bg-red-500/60 rounded-lg flex items-center justify-center cursor-pointer transition-all duration-200">
+                                <label class="absolute inset-0 bg-red-500/0 group-hover:bg-red-500/60 rounded-lg flex items-center justify-center cursor-pointer transition-all">
                                     <input type="checkbox" name="delete_images[]" value="{{ $img->id }}" class="sr-only peer">
-                                    <div class="opacity-0 group-hover:opacity-100 peer-checked:opacity-100 transition">
-                                        <i data-lucide="trash-2" class="w-5 h-5 text-white"></i>
-                                    </div>
-                                    <div class="absolute top-1 right-1 w-5 h-5 bg-white rounded-full items-center justify-center hidden peer-checked:flex">
-                                        <i data-lucide="x" class="w-3 h-3 text-red-500"></i>
-                                    </div>
+                                    <div class="opacity-0 group-hover:opacity-100 peer-checked:opacity-100 transition"><i data-lucide="trash-2" class="w-5 h-5 text-white"></i></div>
+                                    <div class="absolute top-1 right-1 w-5 h-5 bg-white rounded-full items-center justify-center hidden peer-checked:flex"><i data-lucide="x" class="w-3 h-3 text-red-500"></i></div>
                                 </label>
                             </div>
                         @endforeach
                     </div>
-                    <p class="text-xs text-gray-400 mb-3">Haz clic en las imágenes que quieras eliminar.</p>
                 @endif
-
                 <input type="file" name="gallery[]" accept="image/*" multiple class="w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-medium file:bg-blue-600 file:text-white hover:file:bg-blue-700 file:cursor-pointer">
-                <p class="text-xs text-gray-400 mt-1">Selecciona múltiples imágenes. Máximo 5MB cada una.</p>
             </div>
 
             <div class="grid grid-cols-2 gap-4">
@@ -110,4 +110,31 @@
         </form>
     </div>
 </div>
+
+@push('scripts')
+<script>
+    // Datos de subcategorías por industria
+    const subcategoriesData = @json($industries->mapWithKeys(fn($ind) => [$ind->id => $ind->subcategories->map(fn($s) => ['id' => $s->id, 'name' => $s->name])]));
+    const currentSubcategoryId = {{ old('industry_subcategory_id', $project->industry_subcategory_id ?? 'null') }};
+
+    function updateSubcategories() {
+        const industryId = document.getElementById('industry-select').value;
+        const subSelect = document.getElementById('subcategory-select');
+        subSelect.innerHTML = '<option value="">Sin subcategoría</option>';
+
+        if (industryId && subcategoriesData[industryId]) {
+            subcategoriesData[industryId].forEach(sub => {
+                const option = document.createElement('option');
+                option.value = sub.id;
+                option.textContent = sub.name;
+                if (sub.id === currentSubcategoryId) option.selected = true;
+                subSelect.appendChild(option);
+            });
+        }
+    }
+
+    // Inicializar al cargar
+    updateSubcategories();
+</script>
+@endpush
 @endsection

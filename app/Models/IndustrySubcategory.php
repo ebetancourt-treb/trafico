@@ -6,11 +6,10 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
-class Project extends Model
+class IndustrySubcategory extends Model
 {
     protected $fillable = [
-        'industry_id', 'industry_subcategory_id', 'name', 'slug', 'short_description', 'description',
-        'image', 'location', 'client', 'order', 'is_active',
+        'industry_id', 'name', 'slug', 'image', 'description', 'order', 'is_active',
     ];
 
     protected $casts = [
@@ -22,14 +21,9 @@ class Project extends Model
         return $this->belongsTo(Industry::class);
     }
 
-    public function subcategory(): BelongsTo
+    public function projects(): HasMany
     {
-        return $this->belongsTo(IndustrySubcategory::class, 'industry_subcategory_id');
-    }
-
-    public function images(): HasMany
-    {
-        return $this->hasMany(ProjectImage::class)->orderBy('order');
+        return $this->hasMany(Project::class);
     }
 
     public function scopeActive($query)

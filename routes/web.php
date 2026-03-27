@@ -11,6 +11,7 @@ use App\Http\Controllers\Admin\GalleryController;
 use App\Http\Controllers\Admin\ContactMessageController;
 use App\Http\Controllers\Admin\SiteSettingController;
 use App\Http\Controllers\Admin\ProjectController;
+use App\Http\Controllers\Admin\IndustrySubcategoryController;
 use App\Http\Controllers\PageController;
 use App\Http\Controllers\ContactController;
 use Illuminate\Support\Facades\Route;
@@ -72,6 +73,9 @@ Route::prefix('admin')->name('admin.')->middleware('auth')->group(function () {
 
     // Proyectos
     Route::resource('projects', ProjectController::class);
+
+    // Subcategorías de industrias
+    Route::resource('subcategories', IndustrySubcategoryController::class);
 
     // Galería
     Route::resource('gallery', GalleryController::class);

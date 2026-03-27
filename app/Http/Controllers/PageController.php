@@ -91,8 +91,10 @@ class PageController extends Controller
     public function industries()
     {
         $industries = Industry::active()
-            ->withCount(['projects' => fn($q) => $q->where('is_active', true)])
-            ->with(['projects' => fn($q) => $q->active()->take(4)])
+            ->with([
+                'subcategories' => fn($q) => $q->active()->with(['projects' => fn($p) => $p->active()]),
+                'projects' => fn($q) => $q->active(),
+            ])
             ->get();
 
         return view('public.industries', [
@@ -102,7 +104,10 @@ class PageController extends Controller
 
     public function industryProjects(Industry $industry)
     {
-        $industry->load(['projects' => fn($q) => $q->active()]);
+        $industry->load([
+            'subcategories' => fn($q) => $q->active()->with(['projects' => fn($p) => $p->active()]),
+            'projects' => fn($q) => $q->active(),
+        ]);
 
         return view('public.industry-projects', [
             'industry' => $industry,
@@ -115,7 +120,7 @@ class PageController extends Controller
             abort(404);
         }
 
-        $project->load('images');
+        $project->load('images', 'subcategory');
 
         $related = Project::active()
             ->where('industry_id', $industry->id)
