@@ -193,28 +193,24 @@
     <section class="py-20 bg-navy-800" id="industrias">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="text-center mb-14 fade-up">
-                <span class="text-amber-400 font-semibold text-sm tracking-widest uppercase">Sectores</span>
+                <span class="text-amber-400 font-semibold text-sm tracking-widest uppercase">Proyectos</span>
                 <h2 class="font-display font-bold text-4xl lg:text-5xl text-white mt-2">Industrias que Atendemos</h2>
             </div>
 
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
                 @foreach($industries as $industry)
-                    <div class="fade-up bg-white/5 backdrop-blur border border-white/10 rounded-2xl p-6 hover:bg-white/10 transition-all duration-300">
-                        <div class="w-12 h-12 rounded-xl bg-amber-500 flex items-center justify-center mb-4">
+                    <a href="{{ route('industries.projects', $industry->slug) }}"
+                       class="fade-up bg-white/5 backdrop-blur border border-white/10 rounded-2xl p-6 hover:bg-white/10 transition-all duration-300 group block">
+                        <div class="w-12 h-12 rounded-xl bg-amber-500 flex items-center justify-center mb-4 group-hover:bg-white transition-colors duration-300">
                             @php
-                                $indIcons = [
-                                    'home' => 'home',
-                                    'building' => 'building-2',
-                                    'factory' => 'factory',
-                                    'landmark' => 'landmark',
-                                ];
+                                $indIcons = ['home' => 'home', 'building' => 'building-2', 'factory' => 'factory', 'landmark' => 'landmark'];
                                 $indIcon = $indIcons[$industry->icon] ?? 'building';
                             @endphp
                             <i data-lucide="{{ $indIcon }}" class="w-6 h-6 text-navy-800"></i>
                         </div>
-                        <h3 class="font-display font-semibold text-xl text-white mb-3">{{ $industry->name }}</h3>
+                        <h3 class="font-display font-semibold text-xl text-white mb-2 group-hover:text-amber-400 transition-colors duration-300">{{ $industry->name }}</h3>
                         @if($industry->sub_items)
-                            <ul class="space-y-1.5">
+                            <ul class="space-y-1.5 mb-3">
                                 @foreach($industry->sub_items as $item)
                                     <li class="text-gray-400 text-sm flex items-center gap-2">
                                         <span class="w-1.5 h-1.5 rounded-full bg-amber-400 shrink-0"></span>
@@ -223,7 +219,10 @@
                                 @endforeach
                             </ul>
                         @endif
-                    </div>
+                        <span class="inline-flex items-center gap-1 text-amber-400 text-sm font-medium mt-auto opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                            Ver proyectos <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
+                        </span>
+                    </a>
                 @endforeach
             </div>
         </div>

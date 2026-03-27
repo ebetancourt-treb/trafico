@@ -48,6 +48,7 @@
                         ['route' => 'admin.product-categories.index', 'icon' => 'layers', 'label' => 'Categorías'],
                         ['route' => 'admin.products.index', 'icon' => 'package', 'label' => 'Productos'],
                         ['route' => 'admin.industries.index', 'icon' => 'building-2', 'label' => 'Industrias'],
+                        ['route' => 'admin.projects.index', 'icon' => 'folder-open', 'label' => 'Proyectos'],
                         ['route' => 'admin.gallery.index', 'icon' => 'gallery-horizontal-end', 'label' => 'Galería'],
                         ['route' => 'admin.messages.index', 'icon' => 'mail', 'label' => 'Mensajes'],
                         ['route' => 'admin.settings.index', 'icon' => 'settings', 'label' => 'Configuración'],

@@ -6,6 +6,7 @@ use App\Models\CompanyValue;
 use App\Models\GalleryImage;
 use App\Models\Industry;
 use App\Models\Product;
+use App\Models\Project;
 use App\Models\ProductCategory;
 use App\Models\Section;
 use App\Models\SiteSetting;
@@ -89,8 +90,43 @@ class PageController extends Controller
 
     public function industries()
     {
+        $industries = Industry::active()
+            ->withCount(['projects' => fn($q) => $q->where('is_active', true)])
+            ->with(['projects' => fn($q) => $q->active()->take(4)])
+            ->get();
+
         return view('public.industries', [
-            'industries' => Industry::active()->get(),
+            'industries' => $industries,
+        ]);
+    }
+
+    public function industryProjects(Industry $industry)
+    {
+        $industry->load(['projects' => fn($q) => $q->active()]);
+
+        return view('public.industry-projects', [
+            'industry' => $industry,
+        ]);
+    }
+
+    public function projectDetail(Industry $industry, Project $project)
+    {
+        if ($project->industry_id !== $industry->id) {
+            abort(404);
+        }
+
+        $project->load('images');
+
+        $related = Project::active()
+            ->where('industry_id', $industry->id)
+            ->where('id', '!=', $project->id)
+            ->take(4)
+            ->get();
+
+        return view('public.project-detail', [
+            'industry' => $industry,
+            'project' => $project,
+            'related' => $related,
         ]);
     }
 

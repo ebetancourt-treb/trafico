@@ -10,6 +10,7 @@ use App\Http\Controllers\Admin\IndustryController;
 use App\Http\Controllers\Admin\GalleryController;
 use App\Http\Controllers\Admin\ContactMessageController;
 use App\Http\Controllers\Admin\SiteSettingController;
+use App\Http\Controllers\Admin\ProjectController;
 use App\Http\Controllers\PageController;
 use App\Http\Controllers\ContactController;
 use Illuminate\Support\Facades\Route;
@@ -27,6 +28,8 @@ Route::get('/productos/{category:slug}', [PageController::class, 'productCategor
 Route::get('/productos/{category:slug}/{product:slug}', [PageController::class, 'productDetail'])->name('products.detail');
 Route::get('/galeria', [PageController::class, 'gallery'])->name('gallery');
 Route::get('/industrias', [PageController::class, 'industries'])->name('industries');
+Route::get('/industrias/{industry:slug}', [PageController::class, 'industryProjects'])->name('industries.projects');
+Route::get('/industrias/{industry:slug}/{project:slug}', [PageController::class, 'projectDetail'])->name('industries.project.detail');
 Route::get('/contacto', [PageController::class, 'contact'])->name('contact');
 Route::post('/contacto', [ContactController::class, 'store'])->name('contact.store');
 
@@ -66,6 +69,9 @@ Route::prefix('admin')->name('admin.')->middleware('auth')->group(function () {
 
     // Industrias
     Route::resource('industries', IndustryController::class);
+
+    // Proyectos
+    Route::resource('projects', ProjectController::class);
 
     // Galería
     Route::resource('gallery', GalleryController::class);

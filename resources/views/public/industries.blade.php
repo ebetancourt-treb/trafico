@@ -1,49 +1,96 @@
 @extends('layouts.public')
 
-@section('title', 'Industrias - Tráfico Soluciones Viales')
+@section('title', 'Industrias y Proyectos - Tráfico Soluciones Viales')
 
 @section('content')
 
     <section class="bg-navy-800 py-16">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-            <h1 class="font-display font-bold text-4xl lg:text-5xl text-white">Industrias</h1>
-            <p class="text-gray-400 mt-3">Sectores a los que damos servicio</p>
+            <h1 class="font-display font-bold text-4xl lg:text-5xl text-white">Nuestros Proyectos</h1>
+            <p class="text-gray-400 mt-3">Conoce los proyectos que hemos realizado en diferentes sectores</p>
         </div>
     </section>
 
     <section class="py-20">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-                @foreach($industries as $industry)
-                    <div class="fade-up bg-white rounded-2xl border border-gray-100 overflow-hidden shadow-sm hover:shadow-lg transition-all duration-300">
-                        @if($industry->image)
-                            <img src="{{ asset('storage/' . $industry->image) }}" alt="{{ $industry->name }}" class="w-full h-52 object-cover">
-                        @endif
-                        <div class="p-8">
-                            <div class="flex items-center gap-3 mb-4">
-                                <div class="w-10 h-10 rounded-lg bg-navy-800 flex items-center justify-center">
-                                    @php
-                                        $indIcons = ['home' => 'home', 'building' => 'building-2', 'factory' => 'factory', 'landmark' => 'landmark'];
-                                        $indIcon = $indIcons[$industry->icon] ?? 'building';
-                                    @endphp
-                                    <i data-lucide="{{ $indIcon }}" class="w-5 h-5 text-amber-400"></i>
-                                </div>
-                                <h2 class="font-display font-bold text-2xl text-navy-800">{{ $industry->name }}</h2>
+            @foreach($industries as $industry)
+                <div class="mb-16 fade-up">
+                    {{-- Título de categoría clickeable --}}
+                    <div class="flex items-center justify-between mb-8">
+                        <a href="{{ route('industries.projects', $industry->slug) }}" class="flex items-center gap-4 group">
+                            <div class="w-12 h-12 rounded-xl bg-navy-800 flex items-center justify-center group-hover:bg-amber-500 transition-colors duration-300">
+                                @php
+                                    $indIcons = ['home' => 'home', 'building' => 'building-2', 'factory' => 'factory', 'landmark' => 'landmark'];
+                                    $indIcon = $indIcons[$industry->icon] ?? 'building';
+                                @endphp
+                                <i data-lucide="{{ $indIcon }}" class="w-6 h-6 text-white"></i>
                             </div>
-                            @if($industry->description)
-                                <p class="text-gray-600 mb-4">{{ $industry->description }}</p>
-                            @endif
-                            @if($industry->sub_items)
-                                <div class="flex flex-wrap gap-2">
-                                    @foreach($industry->sub_items as $item)
-                                        <span class="inline-block bg-navy-50 text-navy-700 text-sm px-3 py-1.5 rounded-lg font-medium">{{ $item }}</span>
-                                    @endforeach
-                                </div>
-                            @endif
-                        </div>
+                            <div>
+                                <h2 class="font-display font-bold text-2xl sm:text-3xl text-navy-800 group-hover:text-amber-600 transition-colors duration-300">
+                                    {{ $industry->name }}
+                                </h2>
+                                <span class="text-sm text-gray-400">{{ $industry->projects_count }} {{ $industry->projects_count === 1 ? 'proyecto' : 'proyectos' }}</span>
+                            </div>
+                            <i data-lucide="chevron-right" class="w-6 h-6 text-gray-300 group-hover:text-amber-500 group-hover:translate-x-1 transition-all duration-300 ml-2"></i>
+                        </a>
+
+                        @if($industry->projects_count > 4)
+                            <a href="{{ route('industries.projects', $industry->slug) }}"
+                               class="hidden sm:inline-flex items-center gap-2 border-2 border-navy-800 text-navy-800 px-5 py-2 rounded-lg text-sm font-semibold hover:bg-navy-800 hover:text-white transition-all duration-300">
+                                Ver todos <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                            </a>
+                        @endif
                     </div>
-                @endforeach
-            </div>
+
+                    @if($industry->description)
+                        <p class="text-gray-500 mb-6 max-w-2xl">{{ $industry->description }}</p>
+                    @endif
+
+                    @if($industry->projects->count())
+                        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                            @foreach($industry->projects as $project)
+                                <a href="{{ route('industries.project.detail', [$industry->slug, $project->slug]) }}"
+                                   class="bg-white rounded-xl border border-gray-100 overflow-hidden shadow-sm hover:shadow-lg transition-all duration-300 group block">
+                                    @if($project->image)
+                                        <div class="overflow-hidden">
+                                            <img src="{{ asset('storage/' . $project->image) }}" alt="{{ $project->name }}"
+                                                 class="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-500">
+                                        </div>
+                                    @else
+                                        <div class="w-full h-48 bg-gradient-to-br from-gray-100 to-gray-200 flex items-center justify-center">
+                                            <i data-lucide="building" class="w-12 h-12 text-gray-300"></i>
+                                        </div>
+                                    @endif
+                                    <div class="p-5">
+                                        <h3 class="font-display font-semibold text-lg text-navy-800 group-hover:text-amber-600 transition-colors duration-300">
+                                            {{ $project->name }}
+                                        </h3>
+                                        @if($project->location)
+                                            <p class="text-gray-400 text-sm mt-1 flex items-center gap-1">
+                                                <i data-lucide="map-pin" class="w-3.5 h-3.5"></i> {{ $project->location }}
+                                            </p>
+                                        @endif
+                                        @if($project->short_description)
+                                            <p class="text-gray-500 text-sm mt-2 line-clamp-2">{{ $project->short_description }}</p>
+                                        @endif
+                                    </div>
+                                </a>
+                            @endforeach
+                        </div>
+
+                        @if($industry->projects_count > 4)
+                            <div class="mt-6 text-center sm:hidden">
+                                <a href="{{ route('industries.projects', $industry->slug) }}"
+                                   class="inline-flex items-center gap-2 border-2 border-navy-800 text-navy-800 px-6 py-2.5 rounded-lg text-sm font-semibold hover:bg-navy-800 hover:text-white transition-all duration-300">
+                                    Ver todos ({{ $industry->projects_count }}) <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                                </a>
+                            </div>
+                        @endif
+                    @else
+                        <p class="text-gray-400 italic">Próximamente proyectos en esta categoría.</p>
+                    @endif
+                </div>
+            @endforeach
         </div>
     </section>
 

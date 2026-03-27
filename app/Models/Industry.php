@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Industry extends Model
 {
@@ -15,6 +16,11 @@ class Industry extends Model
         'is_active' => 'boolean',
         'sub_items' => 'array',
     ];
+
+    public function projects(): HasMany
+    {
+        return $this->hasMany(Project::class);
+    }
 
     public function scopeActive($query)
     {
