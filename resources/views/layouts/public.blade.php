@@ -189,7 +189,7 @@
                 <div>
                     <div class="flex items-center gap-2 mb-4">
                         @if(!empty($siteSettings['logo']) && Storage::disk('public')->exists($siteSettings['logo']))
-                            <img src="{{ asset('storage/' . $siteSettings['logo']) }}" alt="Tráfico" class="h-10 max-w-[160px] object-contain brightness-0 invert">
+                            <img src="{{ asset('storage/' . $siteSettings['logo']) }}" alt="Tráfico" class="h-10 max-w-[160px] object-contain invert">
                         @else
                             <div class="w-8 h-8 bg-amber-500 rounded-lg flex items-center justify-center">
                                 <i data-lucide="triangle-alert" class="w-5 h-5 text-navy-800"></i>
