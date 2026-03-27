@@ -174,16 +174,7 @@
                     <a href="{{ route('products.category', $category->slug) }}"
                        class="fade-up group bg-white rounded-2xl p-8 shadow-sm hover:shadow-xl transition-all duration-300 hover:-translate-y-1 border border-gray-100">
                         <div class="w-14 h-14 rounded-xl bg-navy-800 flex items-center justify-center mb-5 group-hover:bg-amber-500 transition-colors duration-300">
-                            @php
-                                $icons = [
-                                    'road-sign' => 'signpost',
-                                    'paint-bucket' => 'paintbrush',
-                                    'cone' => 'construction',
-                                    'hard-hat' => 'hard-hat',
-                                ];
-                                $icon = $icons[$category->icon] ?? 'box';
-                            @endphp
-                            <i data-lucide="{{ $icon }}" class="w-7 h-7 text-white"></i>
+                            @include('components.category-icon', ['category' => $category, 'size' => 'lg'])
                         </div>
                         <h3 class="font-display font-semibold text-xl text-navy-800 mb-2">{{ $category->name }}</h3>
                         @if($category->products->count())

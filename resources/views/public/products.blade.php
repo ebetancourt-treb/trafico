@@ -20,11 +20,7 @@
                         <a href="{{ route('products.category', $category->slug) }}"
                            class="flex items-center gap-4 group">
                             <div class="w-12 h-12 rounded-xl bg-navy-800 flex items-center justify-center group-hover:bg-amber-500 transition-colors duration-300">
-                                @php
-                                    $icons = ['road-sign' => 'signpost', 'paint-bucket' => 'paintbrush', 'cone' => 'construction', 'hard-hat' => 'hard-hat'];
-                                    $icon = $icons[$category->icon] ?? 'box';
-                                @endphp
-                                <i data-lucide="{{ $icon }}" class="w-6 h-6 text-white"></i>
+                                @include('components.category-icon', ['category' => $category, 'size' => 'md'])
                             </div>
                             <div>
                                 <h2 class="font-display font-bold text-2xl sm:text-3xl text-navy-800 group-hover:text-amber-600 transition-colors duration-300">
