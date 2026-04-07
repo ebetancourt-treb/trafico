@@ -15,6 +15,7 @@ use App\Http\Controllers\Admin\IndustrySubcategoryController;
 use App\Http\Controllers\PageController;
 use App\Http\Controllers\ContactController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Admin\GalleryCategoryController;
 
 /*
 |--------------------------------------------------------------------------
@@ -79,6 +80,8 @@ Route::prefix('admin')->name('admin.')->middleware('auth')->group(function () {
 
     // Galería
     Route::resource('gallery', GalleryController::class);
+    Route::resource('gallery-categories', GalleryCategoryController::class);
+    Route::post('gallery/bulk-store', [GalleryController::class, 'bulkStore'])->name('gallery.bulk-store');
 
     // Mensajes de contacto
     Route::get('messages', [ContactMessageController::class, 'index'])->name('messages.index');

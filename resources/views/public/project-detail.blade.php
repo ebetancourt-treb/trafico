@@ -116,6 +116,7 @@
         </div>
     </section>
 
+    
     {{-- Proyectos relacionados --}}
     @if($related->count())
         <section class="py-16 bg-gray-50">

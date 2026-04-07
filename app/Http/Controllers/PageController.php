@@ -11,6 +11,7 @@ use App\Models\ProductCategory;
 use App\Models\Section;
 use App\Models\SiteSetting;
 use App\Models\Slide;
+use App\Models\GalleryCategory;
 
 class PageController extends Controller
 {
@@ -83,8 +84,14 @@ class PageController extends Controller
 
     public function gallery()
     {
+        $categories = GalleryCategory::active()->withCount(['images' => fn($q) => $q->where('is_active', true)])->get();
+        $images = GalleryImage::active()->with('galleryCategory')->get();
+        $uncategorized = $images->whereNull('gallery_category_id');
+
         return view('public.gallery', [
-            'images' => GalleryImage::active()->get(),
+            'categories' => $categories,
+            'images' => $images,
+            'uncategorized' => $uncategorized,
         ]);
     }
 

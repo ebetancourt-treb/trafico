@@ -51,6 +51,7 @@
                         ['route' => 'admin.projects.index', 'icon' => 'folder-open', 'label' => 'Proyectos'],
                         ['route' => 'admin.subcategories.index', 'icon' => 'git-branch', 'label' => 'Subcategorías'],
                         ['route' => 'admin.gallery.index', 'icon' => 'gallery-horizontal-end', 'label' => 'Galería'],
+                        ['route' => 'admin.gallery-categories.index', 'icon' => 'tags', 'label' => 'Cat. Galería'],
                         ['route' => 'admin.messages.index', 'icon' => 'mail', 'label' => 'Mensajes'],
                         ['route' => 'admin.settings.index', 'icon' => 'settings', 'label' => 'Configuración'],
                     ];
